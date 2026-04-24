@@ -1,0 +1,75 @@
+# Main experiment configuration.
+# Relative paths are resolved from the folder that contains this file.
+
+common:
+  # Search algorithm to execute: genetic, cmaes, hill, random_search
+  algorithm: cmaes
+  # Base seed for the experiment. Each run advances from this value.
+  base_seed: 420
+  # Search budget and evaluation granularity.
+  num_generations: 200
+  population_size: 100
+  batch_eval_size: 8
+  # Shared latent-space perturbation hyperparameters.
+  pixel_perturb_std: 0.3
+  sigma_init: 1.0
+  sigma_local: 0.2
+  sigma_min: 1.0e-6
+  sigma_max: 3.0
+  # Visualization and artifact-saving controls.
+  k_grid: 25
+  n_snapshots: 25
+  save_best_every: 5
+  # If empty, a default output directory is chosen from the selected algorithm.
+  output_base:
+  # Used only when use_dataset_index_batch is false.
+  input_image_path:
+  # If true, read experiment instances from the CSV. If false, run one local image.
+  use_dataset_index_batch: true
+  # The experiment instances already used by the project are stored here.
+  instances_csv_path: instances/cifar10_selected_instances_representative_1.csv
+  # Dataset source for batch mode.
+  dataset_name: uoft-cs/cifar10
+  dataset_split: test
+  # Number of repeated runs per instance and seed progression between runs.
+  runs_per_instance: 5
+  run_seed_increment: 1
+  # If empty, use every instance listed in the CSV.
+  instance_limit:
+  # If -1, use the model prediction as the original class automatically.
+  target_class: -1
+  # Shared LEI-Local fitness terms.
+  margin_alpha_before: 1.0
+  dist_beta_before: 0.3
+  dist_gamma_after: 2.0
+  margin_gamma_after: 0.2
+  trust_region_radius: 0.75
+  trust_region_penalty: 2.0
+  # Logging and latent-vector saving options.
+  save_reconstruction_path_in_log: true
+  save_full_z_vectors: true
+  z_vector_head_size: 16
+  # Runtime/model-loading options.
+  prefer_local_hf_cache: true
+  vae_model_name: stabilityai/sd-vae-ft-ema
+  classifier_model_name: nateraw/vit-base-patch16-224-cifar10
+
+genetic:
+  # Genetic algorithm only.
+  elitism: 1
+  prob_mutation: 0.95
+  prob_crossover: 0.05
+
+# No exclusive YAML hyperparameters are exposed for CMA-ES at the moment.
+cmaes: {}
+
+hill:
+  # Hill Climbing only.
+  sigma_up_factor: 1.05
+  sigma_down_factor: 0.95
+  # If empty, defaults to num_generations * population_size.
+  classifier_eval_budget_in_loop:
+
+random_search:
+  # If empty, defaults to num_generations * population_size.
+  classifier_eval_budget_in_loop:
